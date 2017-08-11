@@ -1,0 +1,13 @@
+FROM golang:1.8.3
+MAINTAINER tokillabeast <tokillabeast@gmail.com>
+
+#RUN mkdir -p $GOPATH/src/github.com/tokillabeast/golang-postgresql-todo
+RUN mkdir -p /go/src/github.com/tokillabeast/golang-postgresql-todo/backend
+#WORKDIR $GOPATH/src/github.com/tokillabeast/golang-postgresql-todo
+WORKDIR /go/src/github.com/tokillabeast/golang-postgresql-todo/backend
+
+ADD . $GOPATH/src/github.com/tokillabeast/golang-postgresql-todo/backend
+
+RUN go get -u github.com/golang/dep/cmd/dep
+
+CMD ["go", "build"]

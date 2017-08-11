@@ -1,0 +1,41 @@
+version: '3.3'
+
+services:
+
+  todo-db:
+    container_name: todo-db
+    build: ./postgres
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    healthcheck:
+      test: exit 0
+    networks:
+      - todo_network
+
+  todo-backend:
+    container_name: todo-backend
+    build:
+      context: ../backend
+      dockerfile: docker/Dockerfile.dev
+    working_dir: /go/src/github.com/tokillabeast/golang-postgresql-todo
+    command: /bin/sh -c "go build && ./backend"
+#    command: /bin/sh -c "tail -f /dev/null"
+    volumes:
+      - ../backend:/go/src/github.com/tokillabeast/golang-postgresql-todo
+    ports:
+      - "8089:8089"
+    depends_on:
+      - todo-db
+    networks:
+      - todo_network
+
+volumes:
+  todo_backend:
+    driver: local
+
+networks:
+  todo_network:
+    driver: bridge
